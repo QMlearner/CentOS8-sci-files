@@ -1,0 +1,62 @@
+#!/bin/bash
+#SBATCH --job-name=sl_ms    #作业名任取
+#SBATCH --partition=debug     #指定分区
+#SBATCH --nodes=1             #节点数量N
+#SBATCH --ntasks=40           #总核数n
+#SBATCH --ntasks-per-node=40  #每个节点的核数
+#SBATCH --time=1-23:59:59     #最大运行时间day-h:min:sec
+#SBATCH --output=out.job%j    #输出文件
+#SBATCH --error=err.job%j     #报错信息
+
+# 环境变量
+echo "make environment values…"
+export BIOVIA_directory=/opt/BIOVIA
+
+export BIOVIA_LIC_PACK_DIR=$BIOVIA_directory/BIOVIA_LicensePack
+
+export MSI_LIC_PARK_DIR=$BIOVIA_directory/BIOVIA_LicensePack
+export MS_INSTALL_ROOT=$BIOVIA_directory/MaterialsStudio20.1
+export MPIRUN=$MS_INSTALL_ROOT/bin/mpirun
+export I_MPI_ROOT=$MS_INSTALL_ROOT
+export PATH=$MS_INSTALL_ROOT/bin:$PATH
+export LD_LIBRARY_PATH=$MS_INSTALL_ROOT/lib:$MSI_LIC_PARK_DIR/linux/lib:$LD_LIBRARY_PATH
+
+# for Castep
+export CASTEP=$MS_INSTALL_ROOT/bin/castepexe.exe
+export PSPOT_DIR=$MS_INSTALL_ROOT/share/Resources/Quantum/Castep/Potentials
+export TMPDIR=$BIOVIA_directory/tmp
+
+## for Dmol3
+##export DMOL3=$MS_INSTALL_ROOT/bin/dmol3.exe
+##export DMOL3_DATA=$MS_INSTALL_ROOT/share/Resources/Quantum/DMol3
+##export DMOL_TMP=$BIOVIA_directory/tmp
+
+# do not forget to mkdir TMPDir and DMOL_TMP
+
+#----------------------------------------------------------#
+echo "The job "${SLURM_JOB_ID}" is submit to group: "${SLURM_JOB_PARTITION}
+echo "Running with node(s): "${SLURM_JOB_NODELIST}
+#----------------------------------------------------------#
+
+mpirun -n ${SLURM_NTASKS} $CASTEP brook210_opt > output
+
+#----------------------------------------------------------#
+echo "The job "${SLURM_JOB_ID}" is finished by Slurm system. "
+#----------------------------------------------------------#
+
+echo "SLURM_JOB_ID = "${SLURM_JOB_ID}#：作业的唯一标识符。
+echo "SLURM_JOB_NAME = "${SLURM_JOB_NAME}#：作业的名称。
+echo "SLURM_JOB_PARTITION = "${SLURM_JOB_PARTITION}#：作业所分配的分区。
+echo "SLURM_NTASKS = "${SLURM_NTASKS}#：作业中的总任务数。
+echo "SLURM_NTASKS_PER_NODE = "${SLURM_NTASKS_PER_NODE}#：每个节点上的任务数。
+echo "SLURM_JOB_CPUS_PER_NODE = "${SLURM_JOB_CPUS_PER_NODE}#：每个节点上的 CPU 数。
+echo "SLURM_NODELIST = "${SLURM_NODELIST}#：分配给作业的节点列表。
+echo "SLURM_SUBMIT_DIR = "${SLURM_SUBMIT_DIR}#：作业提交的目录。
+echo "SLURM_ARRAY_TASK_ID = "${SLURM_ARRAY_TASK_ID}#：如果作业是作业数组的一部分，则表示当前任务在数组中的索引。
+echo "SLURM_JOB_NODELIST = "${SLURM_JOB_NODELIST}#：作业所分配的节点列表。
+echo "SLURM_JOB_NUM_NODES = "${SLURM_JOB_NUM_NODES}#：作业分配的节点数。
+echo "SLURM_TASK_PID = "${SLURM_TASK_PID}#：作业任务的进程 ID。
+echo "SLURM_JOB_ACCOUNT = "${SLURM_JOB_ACCOUNT}#：作业的帐户名称。
+echo "SLURM_JOB_UID = "${SLURM_JOB_UID}#：作业的用户 ID。
+echo "SLURM_JOB_GID = "${SLURM_JOB_GID}#：作业的组 ID
+

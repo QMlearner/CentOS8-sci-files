@@ -1,0 +1,36 @@
+#!/bin/bash
+#SBATCH --job-name=sl_vasp    #作业名任取
+#SBATCH --partition=debug     #指定分区
+#SBATCH --nodes=1             #节点数量N
+#SBATCH --ntasks=40           #总核数n
+#SBATCH --ntasks-per-node=40  #每个节点的核数
+#SBATCH --time=1-23:59:59     #最大运行时间day-h:min:sec
+#SBATCH --output=out.job%j    #输出文件
+#SBATCH --error=err.job%j     #报错信息
+
+#----------------------------------------------------------#
+echo "The job "${SLURM_JOB_ID}" is submit to group: "${SLURM_JOB_PARTITION}
+echo "Running with node(s): "${SLURM_JOB_NODELIST}
+#----------------------------------------------------------#
+
+mpirun -n ${SLURM_NTASKS} /vasplocal/vasp.6.3.0/bin/vasp_std
+
+#----------------------------------------------------------#
+echo "The job "${SLURM_JOB_ID}" is finished by Slurm system. "
+#----------------------------------------------------------#
+
+echo "SLURM_JOB_ID = "${SLURM_JOB_ID}#：作业的唯一标识符。
+echo "SLURM_JOB_NAME = "${SLURM_JOB_NAME}#：作业的名称。
+echo "SLURM_JOB_PARTITION = "${SLURM_JOB_PARTITION}#：作业所分配的分区。
+echo "SLURM_NTASKS = "${SLURM_NTASKS}#：作业中的总任务数。
+echo "SLURM_NTASKS_PER_NODE = "${SLURM_NTASKS_PER_NODE}#：每个节点上的任务数。
+echo "SLURM_JOB_CPUS_PER_NODE = "${SLURM_JOB_CPUS_PER_NODE}#：每个节点上的 CPU 数。
+echo "SLURM_NODELIST = "${SLURM_NODELIST}#：分配给作业的节点列表。
+echo "SLURM_SUBMIT_DIR = "${SLURM_SUBMIT_DIR}#：作业提交的目录。
+echo "SLURM_ARRAY_TASK_ID = "${SLURM_ARRAY_TASK_ID}#：如果作业是作业数组的一部分，则表示当前任务在数组中的索引。
+echo "SLURM_JOB_NODELIST = "${SLURM_JOB_NODELIST}#：作业所分配的节点列表。
+echo "SLURM_JOB_NUM_NODES = "${SLURM_JOB_NUM_NODES}#：作业分配的节点数。
+echo "SLURM_TASK_PID = "${SLURM_TASK_PID}#：作业任务的进程 ID。
+echo "SLURM_JOB_ACCOUNT = "${SLURM_JOB_ACCOUNT}#：作业的帐户名称。
+echo "SLURM_JOB_UID = "${SLURM_JOB_UID}#：作业的用户 ID。
+echo "SLURM_JOB_GID = "${SLURM_JOB_GID}#：作业的组 ID
